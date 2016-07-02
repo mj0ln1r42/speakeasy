@@ -13,40 +13,34 @@
 <script>
 
 	var responsiveVoiceParams = {
-		onend: voiceEndCallback,
 		volume: 1,
 		rate: 1,
-		
 	};
 	
 	function sayText(text){
+		if (responsiveVoice.isPlaying())
+			responsiveVoice.cancel();
+
 		var voice = $("#voicesDropdown").val();
 		responsiveVoice.speak(text, voice, responsiveVoiceParams);
 	}
 	
-	function voiceEndCallback(){
-		$("#textQueue li:first").remove();
-		sayNextTextBlock();
-	}
-	
-	function sayNextTextBlock(){
-		if (!responsiveVoice.isPlaying()){
-			var $nextInQueue = $("#textQueue li:first");
-			if ($nextInQueue.length > 0){
-				var text = $nextInQueue.text();
-				sayText(text);
-			}
-		}
+	function addTextToHistory(text){
+		var $textHistory = $("#textHistory");
+		$textHistory.append($("<li/>").text(text));
+		$textHistoryItems = $textHistory.children("li");
+		if ($textHistoryItems.size() > 5)
+			$textHistoryItems.first().remove();
+			
 	}
 	
 	function textboxSubmit(){
 		var $textInput = $("#textInput");
 		var text = $textInput.val();
+		$textInput.val('');
 		if (text != ""){
-			var $textQueue = $("#textQueue");
-			$textQueue.append($("<li/>").text(text));
-			$textInput.val("");
-			sayNextTextBlock();
+			sayText(text);
+			addTextToHistory(text);
 		}
 	}
 	
@@ -80,9 +74,8 @@
 </head>
 	
 <body>
-	<div id="top"></div>
+	<div class="main">
 	
-	<div id="wrapper">
 		<header>
 			<div id="masthead" class="container">
 				<h2 id="theme-title">Speak Easy</h2>
@@ -91,13 +84,20 @@
 
 		<div id="content" class="container">
 			
-			<div class="section">
-				<select id="voicesDropdown" name="voicesDropdown"></select>
+			<div class="section col-md-4">
+				<select id="voicesDropdown" name="voicesDropdown" class="form-control"></select>
 				<br /><br />
-				<ul id="textQueue"></ul>
+				<ul id="textHistory"></ul>
 				<br /><br />
-				<input id="textInput" name="textInput" type="text" value="Hot Tamales"/>
-				<input id="playButton" name="playButton" type="button" value="Play"/>
+				<div class="input-group">
+					<input id="textInput" name="textInput" type="text" class="form-control" value="Hot Tamales"/>
+					<span class="input-group-btn">
+						<button id="playButton" name="playButton" type="button" class="btn btn-success">Play</button>
+					</span>
+				</div>
+			</div>
+			
+			<div class="col-md-8">
 			</div>
 		</div>
 	
