@@ -4,7 +4,7 @@
 	
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Speak Easy</title>
+<title>Speak-ez</title>
    
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,8 +23,13 @@
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
+<style>
+.sortable-grid { list-style-type: none; }
+.sortable-grid button { float: left; }
+</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
 	
 <script>
@@ -199,15 +204,21 @@ var mostCommonWords =
 function wordClicked(word){
 	var $textInput = $("#textInput");
 	var text = $textInput.val();
-	$textInput.val(text+" "+word);
+	if(text == "")
+		$textInput.val(word);
+	else
+		$textInput.val(text+" "+word);
 }
 
 $(function(){
-	var wordList = $("#wordList");
+	var $wordList = $("#wordList");
 	for(i = 0; i < mostCommonWords.length; i++){
 		var word = mostCommonWords[i];
-		wordList.append($("<div class='col-xs-1'><button type='button' class='btn btn-info' onclick='wordClicked(\""+word+"\");'>"+word+"</button></div>"));
+		$wordList.append($("<button type='button' class='btn btn-info ui-sortable-handle' onclick='wordClicked(\""+word+"\");'>"+word+"</button>"));
 	}
+	
+	$wordList.sortable();
+	$wordList.disableSelection();
 });
 </script>
 
@@ -227,7 +238,7 @@ body {
 				<span class="sr-only">Toggle navigation</span>
 				<i class="icon-cog"></i>
 			</button>
-			<a class="navbar-brand" href="#">Speak Easy</a>
+			<a class="navbar-brand" href="#">Speak-ez</a>
 		</div>
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<div class="nav navbar-nav navbar-right" style="margin-top: 7.5px">
@@ -245,7 +256,7 @@ body {
 		
 		<div class="section col-md-4">
 			<div class="input-group">
-				<input id="textInput" name="textInput" type="text" class="form-control" value="Hot Tamales"/>
+				<input id="textInput" name="textInput" type="text" class="form-control"/>
 				<div class="input-group-btn">
 					<button id="playButton" name="playButton" type="button" class="btn btn-success">Play</button>
 					<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" tabindex="-1">
@@ -257,8 +268,10 @@ body {
 		</div>
 	</div>
 
-	<div id="wordList" class="container">
-	</div>
+	<br/>
+
+	<ul id="wordList" class="container sortable-grid">
+	</ul>
 
 </div>
 
