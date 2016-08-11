@@ -49,7 +49,10 @@
 	
 	function addTextToHistory(text){
 		var $textHistory = $("#textHistory");
-		
+		if ($textHistory.length == 0){
+			$("#textControls").append("<ul id='textHistory' class='dropdown-menu pull-right' role='menu'></ul>");
+			$textHistory = $("#textHistory");
+		}
 		$textHistory.prepend($("<li><a>"+text+"</a></li>"));
 		$textHistoryItems = $textHistory.children("li");
 		$textHistoryItems.first()
@@ -257,12 +260,11 @@ body {
 		<div class="section col-md-4">
 			<div class="input-group">
 				<input id="textInput" name="textInput" type="text" class="form-control"/>
-				<div class="input-group-btn">
+				<div id="textControls" class="input-group-btn">
 					<button id="playButton" name="playButton" type="button" class="btn btn-success">Play</button>
 					<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 					  &nbsp;<span class="caret"></span>&nbsp;
 					</button>
-					<ul id="textHistory" class="dropdown-menu pull-right" role="menu"></ul>
 				</div>
 			</div>
 		</div>
